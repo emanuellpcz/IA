@@ -1,0 +1,244 @@
+Crea un sitio web de varias páginas para "Comal de Casa", un restaurante de cocina mexicana tradicional. Usa Next.js (App Router), Tailwind CSS y lucide-react para los íconos. Todo el texto va en español de Colombia, tuteando al usuario, en sentence case (sin mayúsculas sostenidas ni cadenas de signos de exclamación).
+
+# 1. MARCA
+- Nombre: Comal de Casa
+- Eslogan: Tradición que nos reúne
+- Personalidad: cálida, familiar, auténtica y elegante. Voz de anfitrión: generosa, segura, con humor ligero. Evita frases hechas como "viaje culinario", "sabores que bailan" o "experiencia inolvidable".
+- Logo: genera tú un logo en SVG inline. Símbolo: un comal (plancha circular de barro) estilizado, con una mazorca de maíz y rizos de vapor que suben desde él, en trazo uniforme de 1.5 px con esquinas ligeramente redondeadas, en rojo caoba con un detalle verde. Junto al símbolo, el wordmark "Comal de Casa" en Cormorant Garamond 700. Crea dos versiones: una para fondo claro (rojo caoba) y otra para fondo oscuro (crema). No uses clip-art ni cactus, sombreros o calaveras.
+- Membresía: Club Comal
+
+# 2. SISTEMA DE COLOR (obligatorio, consistente en TODAS las páginas)
+Define estos colores en el tema de Tailwind (nombres exactos) y no uses ningún otro tono fuera de estas escalas:
+
+rich-mahogany (rojo de marca): 50 #fce9ea, 100 #f8d3d5, 200 #f1a7ac, 500 #dd222f, 600 #b01c25, 700 #84151c, 800 #580e13, 900 #2c0709, 950 #1f0507
+black-forest (verde): 50 #eff8ed, 100 #dff0db, 600 #4a923a, 700 #386d2c, 800 #25491d, 900 #13240f
+champagne-mist (amarillo/ámbar): 100 #fce9cf, 300 #f6be6f, 400 #f3a83f, 500 #f0920f, 600 #c0750c
+bright-lemon (solo chispa): 500 #ffe500
+
+Reglas de uso:
+- Fondo de la página y de las secciones: BLANCO (#ffffff). Texto principal en rich-mahogany-950; texto secundario en un tono suave de la misma escala.
+- Rojo (rich-mahogany-600/700): titulares clave, precios, líneas de acento, íconos principales, la franja del Club Comal y el footer (en rich-mahogany-950).
+- Verde (black-forest-700/800): íconos de servicios, subrayados finos, etiquetas "vegetariano" y detalles secundarios. Usa rojo y verde de forma equilibrada y con el mismo criterio en todas las secciones y páginas, sin que se vea sobrecargado: predominan el blanco y los espacios amplios.
+- Amarillo (champagne-mist-400, hover champagne-mist-500, texto rich-mahogany-950): ÚNICAMENTE para botones y lo más importante de cada página (el CTA principal). Nunca como fondo de sección ni en textos largos. bright-lemon-500 se usa una sola vez en todo el sitio, como detalle mínimo.
+- Reparto aproximado: 70 % blanco, 15 % rojo, 10 % verde, 5 % amarillo.
+- Contraste mínimo 4.5:1 en texto de cuerpo; el verde claro y el amarillo nunca se usan como texto sobre blanco.
+
+# 3. TIPOGRAFÍA
+Carga con next/font/google: Cormorant Garamond (pesos 600 y 700, e itálica 600) para titulares, nombres de categoría y de plato, y frases ancla; Plus Jakarta Sans (400, 500, 600, 700) para cuerpo, navegación, precios y botones. No agregues otra familia. Cormorant nunca por debajo de 20 px.
+- H1 hero: clamp(2.75rem, 7vw, 5.5rem), peso 700, interlineado ~1.
+- H2 de sección: clamp(2rem, 4vw, 3.25rem), peso 700.
+- Nombre de plato: Cormorant 600, 1.5rem. Precio: Plus Jakarta Sans 700.
+- Cuerpo: 1rem–1.125rem, interlineado 1.6.
+
+# 4. ARQUITECTURA DEL SITIO (11 páginas)
+Rutas con App Router:
+- / → Inicio
+- /menu/entradas
+- /menu/tacos
+- /menu/antojitos
+- /menu/platos-fuertes
+- /menu/parrilla
+- /menu/postres
+- /menu/bebidas
+- /menu/cocteles-y-licores
+- /membresia → Club Comal
+- /reservas → Reservas
+
+Implementa las 8 páginas del menú con UNA sola ruta dinámica app/menu/[categoria]/page.tsx que use generateStaticParams, notFound() para slugs inválidos y generateMetadata propio por categoría. Guarda todos los datos del menú en un archivo lib/menu.ts (categorías, descripciones, imágenes, platos) y todos los datos del negocio en lib/business.ts. Crea componentes compartidos: Header, Footer, WhatsAppButton, TileStrip (franja de azulejo), CategoryCard, DishItem, SectionTitle y FaqAccordion.
+
+# 5. COMPONENTES GLOBALES
+
+## 5.1 Header (sticky, fondo blanco, borde inferior fino, en todas las páginas)
+Izquierda: logo (versión clara) que enlaza a /. Centro: Inicio (/), Menú, Nosotros (/#nosotros), Contáctanos (/#contacto), Membresía (/membresia), Reservas (/reservas). "Menú" abre un desplegable (hover/foco en escritorio, accesible con teclado) con las 8 categorías enlazadas a sus páginas, más el enlace "Ver todas las categorías" a /#menu. Derecha: botón amarillo pill "Pedir a domicilio" (WhatsApp). La página activa se marca con un subrayado fino en rojo. En móvil: menú hamburguesa que abre un panel con los mismos enlaces (el Menú como acordeón) y el botón. Si el usuario está en otra página, los enlaces ancla (/#nosotros, /#contacto) lo llevan al inicio con scroll suave.
+
+## 5.2 Footer (en todas las páginas)
+Fondo rich-mahogany-950, texto crema, con la franja de azulejo en el borde superior. Cuatro columnas separadas por filetes verticales finos (rich-mahogany-800); en móvil, apiladas:
+1. Logo (versión crema).
+2. "Nosotros": "En Comal de Casa cocinamos las recetas que se heredan en la mesa familiar: tortillas hechas a diario, salsas de molcajete y guisos de cocción lenta. Siempre hay un lugar más en la mesa."
+3. "Contacto": Teléfono +57 300 123 4567 · Correo hola@comaldecasa.co. Debajo, "Redes" con íconos de Instagram (@comaldecasa) y WhatsApp.
+4. "Ubicación": imagen aérea tipo mapa (radio 4 px), la dirección, el horario y el enlace de texto "Cómo llegar" (Google Maps).
+Línea final centrada: "© 2026 Comal de Casa. Todos los derechos reservados."
+
+## 5.3 Franja de azulejo
+Patrón geométrico simétrico y teselable en SVG/CSS con rich-mahogany, champagne-mist y un acento black-forest, de 16–24 px de alto. Aparece solo en el pie del hero del inicio y en el borde superior del footer. Nunca como fondo completo.
+
+## 5.4 Botones
+- Primario (amarillo): fondo champagne-mist-400, hover champagne-mist-500, texto rich-mahogany-950, Plus Jakarta Sans 600, rounded-full, alto táctil ≥ 44 px.
+- Secundario sobre fondo oscuro: contorno 1.5 px crema, sin relleno, texto crema.
+- Enlace de texto: rojo 600 con subrayado (underline-offset 0.25em), sin flechas decorativas.
+- Verbos fijos: "Reservar mesa", "Ver la carta", "Pedir a domicilio", "Únete ahora", "Cómo llegar". La misma acción se llama siempre igual.
+- Radios: 4 px en imágenes y tarjetas; rounded-full solo en botones y etiquetas.
+- Sin sombras pesadas, sin degradados decorativos, sin íconos dentro de círculos de color.
+- Foco de teclado visible en todo elemento interactivo: outline 3 px champagne-mist-500, offset 2 px.
+
+# 6. PÁGINA DE INICIO ( / )
+
+## 6.1 Hero (id="inicio")
+Ocupa casi toda la altura de la pantalla. La imagen es el FONDO de la sección (object-cover) y el texto va encima, centrado, sobre un overlay oscuro en degradado (rich-mahogany-950 al 55–70 %) que garantice contraste.
+- Eyebrow pequeño en crema: "Tradición que nos reúne"
+- H1 (crema): "El sabor de México se siente como en casa"
+- Subtítulo (crema): "Tradición, sabor y momentos para compartir"
+- Dos botones: "Reservar mesa" (amarillo, WhatsApp directo) y "Ver la carta" (contorno crema, ancla a #menu).
+Al pie, la franja de azulejo. Animación: un único fundido suave del contenido al cargar (≤ 600 ms), respetando prefers-reduced-motion. Sin animaciones "fade-up" en otras secciones.
+
+## 6.2 Franja Club Comal (id="membresia-inicio")
+Banda de ancho completo en rich-mahogany-600 con texto crema, en una fila (en móvil, apilada):
+- Titular en Cormorant 700: "Conviértete en parte de nuestra familia y disfruta varios beneficios"
+- Debajo, en una línea pequeña con separadores verticales finos: "Postre de cortesía en tu cumpleaños" · "10 % de descuento en tus domicilios" · "Acceso anticipado a eventos y menús de temporada"
+- Derecha: botón amarillo "Únete ahora" que enlaza a /membresia (es el CTA más destacado del inicio).
+
+## 6.3 Descubre nuestros sabores (id="menu")
+Título centrado: "Descubre nuestros sabores"; subtítulo: "Explora nuestras diferentes categorías". Una línea fina verde bajo el título como único adorno.
+OCHO tarjetas (4 columnas × 2 filas en escritorio, 2 columnas en tablet, 1 en móvil). Cada tarjeta completa es un enlace a la página de su categoría. Contenido: imagen ratio 4:5 con degradado inferior oscuro, nombre en Cormorant 600 (crema) abajo a la izquierda sobre la imagen, y debajo de la imagen un texto breve con información general de lo que se vende (sin precios) y el enlace de texto "Ver categoría". Al pasar el cursor: zoom suave de la imagen (respetando prefers-reduced-motion).
+1. Entradas → /menu/entradas — "Guacamole al momento, esquites, sopa de tortilla, tostadas de tinga y ceviche estilo Baja."
+2. Tacos → /menu/tacos — "Al pastor, cochinita pibil, birria, carnitas, nopal asado y pescado estilo Baja."
+3. Antojitos → /menu/antojitos — "Quesadillas, tlayuda, sopes, chilaquiles, tamales y gorditas hechas a diario."
+4. Platos fuertes → /menu/platos-fuertes — "Mole poblano, enchiladas, chiles rellenos, cochinita pibil, pozole y pescado a la veracruzana."
+5. Parrilla → /menu/parrilla — "Arrachera, chuleta adobada, costillas de chipotle, alambre y parrilladas para compartir."
+6. Postres → /menu/postres — "Churros con chocolate y cajeta, flan, pastel de tres leches, pastel de elote y arroz con leche."
+7. Bebidas → /menu/bebidas — "Aguas frescas, horchata, café de olla, chocolate caliente y limonadas."
+8. Cócteles y licores → /menu/cocteles-y-licores — "Margaritas, palomas, micheladas, mezcales, tequilas y cervezas mexicanas."
+
+## 6.4 Disfruta México donde estés (id="nosotros")
+Título centrado: "Disfruta México donde estés", con un párrafo de 2 líneas: "En tu mesa o en la de tu casa, la receta es la misma: maíz recién molido, brasa y tiempo para la sobremesa."
+- Imagen panorámica de ancho completo (21:9).
+- Justo debajo, dos bloques del mismo tamaño lado a lado (apilados en móvil), con fondo blanco, borde de 1 px (champagne-mist-300 suave) y contenido centrado:
+  - Ícono lucide "Bike" (rojo 600) · "Domicilios" en negrita · "Realiza tu pedido" · botón amarillo "Pedir a domicilio" (WhatsApp).
+  - Ícono lucide "AlarmClock" (rojo 600) · "Reservas" en negrita · "Reserva tu mesa" · botón amarillo "Reservar mesa" (WhatsApp directo) y debajo el enlace de texto "Más información" a /reservas.
+
+## 6.5 Servicios
+Título centrado: "Servicios". Una sola fila de 4 ítems con divisores verticales finos (2×2 en móvil, sin divisores). Es SOLO informativa: sin texto adicional, sin enlaces, sin hover ni interacción. Cada ítem: ícono lucide (trazo 1.5, black-forest-700) y título en negrita (rojo 700):
+1. CreditCard — "Múltiples medios de pago"
+2. Utensils — "Menú adaptado"
+3. Star — "Exclusividad"
+4. Car — "Estacionamiento"
+No agregues más ítems ni descripciones.
+
+# 7. PÁGINAS DE CATEGORÍA ( /menu/[categoria] )
+Cada una de las 8 páginas usa la misma plantilla con su propio contenido:
+1. Hero compacto (≈ 50–60 vh): foto de la categoría como fondo con el mismo overlay oscuro; encima, migas de pan en crema ("Inicio / Menú / [Categoría]"), H1 con el nombre de la categoría y una frase de apoyo de una línea.
+2. Introducción: 2–3 líneas en voz de anfitrión sobre la categoría (centrada, máx. 65 caracteres por línea).
+3. Lista de platos en dos columnas (una en móvil). Cada plato (DishItem): nombre en Cormorant 600, precio en Plus Jakarta Sans 700 rojo 700 alineado a la derecha (formato colombiano, ej. $28.900), descripción en sans con texto secundario y filete inferior de 1 px. Etiquetas en píldora de borde fino con punto de color: verde = "Vegetariano", rojo = "Picante". Los platos no son enlaces.
+4. Tira de 3 fotografías realistas de la categoría (grid, ratio 3:2, radio 4 px) entre la lista y el cierre.
+5. Navegación entre categorías: los 8 nombres como chips (rounded-full, borde fino); el de la página actual relleno en rojo 600 con texto crema. Debajo, enlaces "Categoría anterior" y "Categoría siguiente".
+6. Cierre: fondo blanco con título "Pásale, que la mesa ya está servida" y dos botones: "Pedir a domicilio" (amarillo) y "Reservar mesa" (contorno rojo 600 sobre blanco).
+Al final de la página de cócteles y licores, una nota pequeña: "Consume licor con responsabilidad. Prohibida la venta de licor a menores de 18 años."
+
+## Contenido de cada categoría (precios en pesos colombianos, ficticios)
+
+ENTRADAS — intro: "Para abrir la mesa: salsas de molcajete, maíz tierno y tostadas recién hechas."
+- Guacamole de molcajete — aguacate Hass, cebolla, cilantro, limón y chile serrano, con totopos de maíz — $28.900 — Vegetariano
+- Esquites de la casa — maíz tierno en mantequilla, epazote, mayonesa, queso cotija y chile piquín — $18.900 — Vegetariano, Picante
+- Sopa de tortilla — caldo de jitomate asado y chile pasilla, tiras de tortilla, aguacate, crema y queso panela — $22.900
+- Tostadas de tinga — pollo deshebrado en chipotle, frijoles refritos, lechuga y crema — $24.900 — Picante
+- Ceviche estilo Baja — pescado blanco curado en limón, pepino, cilantro y chile, con tostadas — $32.900
+- Queso fundido con chorizo — queso Oaxaca gratinado, chorizo artesanal y tortillas de maíz — $29.900
+
+TACOS — intro: "Tortilla de maíz hecha a diario, cocción lenta y salsas de la casa. Cada orden trae tres tacos."
+- Tacos al pastor — cerdo adobado en achiote, piña asada, cebolla y cilantro — $29.900
+- Tacos de cochinita pibil — cerdo marinado en achiote y naranja agria, cebolla morada encurtida — $29.900
+- Tacos de birria con consomé — res cocida lentamente en chiles secos, queso y consomé para sopear — $34.900 — Picante
+- Tacos de carnitas — cerdo confitado en su grasa, cebolla, cilantro y salsa verde — $28.900
+- Tacos de nopal asado — nopal a la plancha, queso panela, pico de gallo y frijoles — $24.900 — Vegetariano
+- Tacos de pescado estilo Baja — pescado apanado, repollo morado, crema de chipotle y limón — $32.900
+
+ANTOJITOS — intro: "Los antojos de la cocina de casa, de la masa al comal."
+- Quesadillas de flor de calabaza — tortilla de maíz azul, queso Oaxaca y epazote — $22.900 — Vegetariano
+- Tlayuda oaxaqueña — tortilla crujiente con asiento, frijoles, quesillo, tasajo y aguacate — $36.900
+- Sopes de chorizo y papa — masa gruesa, frijoles, chorizo, papa, lechuga y queso fresco — $23.900
+- Chilaquiles verdes con pollo — totopos en salsa verde, pollo, crema, cebolla y queso — $26.900 — Picante
+- Tamales de elote (2 unidades) — masa de maíz tierno envuelta en hoja, con crema y queso — $19.900 — Vegetariano
+- Gorditas de chicharrón prensado — masa de maíz rellena, salsa roja y queso fresco — $22.900 — Picante
+
+PLATOS FUERTES — intro: "Guisos de olla grande, de esos que se sirven cuando la familia se reúne."
+- Mole poblano con pollo — muslo y pierna en mole de chiles, almendra y chocolate, arroz rojo y ajonjolí — $42.900
+- Enchiladas verdes — tortillas rellenas de pollo, salsa de tomatillo, crema y queso fresco — $38.900 — Picante
+- Chiles rellenos — chile poblano relleno de queso, capeado, en salsa de jitomate asado — $39.900 — Vegetariano
+- Cochinita pibil — cerdo en achiote y naranja agria cocido en hoja, arroz, frijoles y cebolla encurtida — $44.900
+- Pozole rojo — maíz cacahuazintle, cerdo, chile guajillo, rábano, lechuga y orégano — $36.900 — Picante
+- Pescado a la veracruzana — filete en salsa de jitomate, aceitunas, alcaparras y chile güero — $48.900
+
+PARRILLA — intro: "Brasa y sazón de siempre, con guarniciones de cebollitas, nopal y frijoles charros."
+- Arrachera a la parrilla (300 g) — res marinada en limón y ajo, con cebollitas cambray y tortillas — $62.900
+- Chuleta de cerdo adobada — chuleta gruesa en adobo de chile ancho, con nopal asado — $52.900
+- Costillas de chipotle — costillas de cerdo glaseadas en salsa de chipotle y miel — $58.900 — Picante
+- Alambre de res — res, tocino, pimentón y queso gratinado, con tortillas — $49.900
+- Pollo al carbón con achiote — medio pollo marinado, arroz y ensalada fresca — $44.900
+- Parrillada para compartir (2 a 3 personas) — arrachera, chuleta, chorizo, pollo, nopal, cebollitas y frijoles charros — $138.900
+
+POSTRES — intro: "Para la sobremesa: dulces de la abuela, de cajeta, canela y maíz."
+- Churros con chocolate y cajeta — recién fritos, con azúcar y canela — $19.900 — Vegetariano
+- Flan napolitano — de vainilla, con caramelo oscuro — $15.900 — Vegetariano
+- Pastel de tres leches — bizcocho esponjoso, crema chantilly y canela — $16.900 — Vegetariano
+- Pastel de elote con helado — textura húmeda de maíz tierno, con helado de vainilla — $17.900 — Vegetariano
+- Arroz con leche — cocido lento con canela en rama y piel de naranja — $13.900 — Vegetariano
+
+BEBIDAS (sin alcohol) — intro: "Aguas frescas de fruta y semilla, café de olla y chocolate de molino."
+- Agua fresca de jamaica — flor de jamaica y un toque de limón — $9.900 — Vegetariano
+- Horchata — arroz, canela y vainilla — $10.900 — Vegetariano
+- Agua de tamarindo — tamarindo natural con borde de chile — $9.900 — Vegetariano
+- Limonada con hierbabuena — limón natural, hierbabuena y hielo — $10.900 — Vegetariano
+- Café de olla — café con piloncillo y canela — $8.900 — Vegetariano
+- Chocolate caliente mexicano — chocolate de metate, canela y leche — $11.900 — Vegetariano
+
+CÓCTELES Y LICORES — intro: "La sobremesa también se sirve en copa: margaritas de la casa, mezcales y clásicos de cantina."
+- Margarita de la casa — tequila blanco, limón, triple sec y borde de sal — $29.900
+- Margarita de tamarindo y chile — tequila reposado, pulpa de tamarindo y borde de chile — $32.900 — Picante
+- Paloma — tequila, toronja, limón y soda con borde de sal — $28.900
+- Michelada clásica — cerveza, limón, salsas, sal y borde de chile — $19.900 — Picante
+- Copa de mezcal artesanal (2 oz) — con naranja y sal de gusano — $34.900
+- Tequila reposado (2 oz) — servido derecho, con sangrita — $32.900
+- Cerveza mexicana — botella de 355 ml, con limón y sal — $14.900
+- Carajillo — licor 43, espresso y hielo — $27.900
+
+# 8. PÁGINA DE MEMBRESÍA ( /membresia )
+1. Hero compacto (mismo estilo y overlay que las categorías): H1 "Club Comal", frase "Una mesa con lugar para ti, siempre". Foto de una mesa familiar celebrando con postre.
+2. Sección "Beneficios del Club Comal" con 5 beneficios en una lista limpia de 2 columnas, cada uno con ícono lucide (trazo 1.5, verde 700), título en Cormorant 600 y una línea de descripción:
+   - Cake — Postre de cortesía en tu cumpleaños
+   - Percent — 10 % de descuento en tus domicilios
+   - Ticket — Acceso anticipado a eventos y menús de temporada
+   - CalendarCheck — Prioridad de reserva los fines de semana
+   - GlassWater — Bebida de bienvenida en tu primera visita de cada mes
+3. "Cómo funciona" en 3 pasos numerados en Cormorant (rojo 600): 1) Escríbenos por WhatsApp. 2) Recibe tu código Club Comal. 3) Disfruta tus beneficios en cada visita y pedido. Aclara: "Sin costo de inscripción".
+4. Bloque destacado con fondo rich-mahogany-600 y texto crema: frase en Cormorant itálica 600 "Siempre hay un lugar más en la mesa." y el botón amarillo "Únete ahora" (WhatsApp con el mensaje del Club Comal). Es el CTA principal de la página.
+5. Condiciones en texto pequeño: beneficios personales e intransferibles, no acumulables con otras promociones, sujetos a disponibilidad.
+6. FaqAccordion con 3 preguntas: ¿Cuánto cuesta unirme? (nada), ¿Cómo uso mis beneficios? (muestra tu código al pedir o al pagar), ¿Puedo compartir mi membresía? (no, es personal).
+
+# 9. PÁGINA DE RESERVAS ( /reservas )
+1. Hero compacto (mismo estilo): H1 "Reserva tu mesa", frase "Pásale, que la mesa ya está servida". Foto de una mesa puesta con cazuelas de barro, flores y velas.
+2. CTA principal: botón amarillo grande "Reservar mesa" (WhatsApp directo, con mensaje prellenado). NO hay formulario: toda la reserva se coordina por WhatsApp.
+3. "Cómo reservar" en 3 pasos: 1) Escríbenos por WhatsApp. 2) Cuéntanos la fecha, la hora y cuántas personas son. 3) Te confirmamos tu mesa.
+4. Tres bloques de información con filetes verticales finos: Horario (completo), Dirección (con enlace "Cómo llegar") y Grupos y eventos ("Si son más de 8 personas, escríbenos con anticipación").
+5. FaqAccordion con 5 preguntas: ¿Es necesario reservar? (no es obligatorio, pero lo recomendamos los fines de semana), ¿Cuánto tiempo guardan la mesa? (15 minutos de tolerancia), ¿Tienen opciones vegetarianas? (sí, marcadas en la carta), ¿Reciben niños? (sí), ¿Hay parqueadero? (sí).
+
+# 10. IMÁGENES (genéralas tú)
+Genera todas las imágenes tú misma. Deben ser fotografías realistas de comida y ambiente mexicano tradicional, con luz cálida natural o de cocina, tonos cálidos, superficies de barro, madera y lino, vapor y manos sirviendo. NO uses figuras geométricas, ilustraciones, clip-art, fondos blancos de catálogo ni placeholders grises. Todas con alt descriptivo, width y height definidos, y loading="lazy" salvo la del hero principal.
+- Hero del inicio: mesa grande con tacos al pastor, guacamole en molcajete, salsas, tortillas humeantes sobre un comal y limones; vista 3/4, 16:9.
+- Tarjetas y heros de categoría (una foto por categoría, 4:5 para la tarjeta y una versión 16:9 para el hero de su página): Entradas (guacamole con totopos y esquites en cazuelas de barro); Tacos (tacos al pastor y de cochinita sobre tortillas de maíz); Antojitos (tlayuda, sopes y tamales); Platos fuertes (mole poblano con pollo en plato de barro); Parrilla (arrachera y chuleta sobre brasas); Postres (churros con chocolate y cajeta); Bebidas (aguas frescas de jamaica y horchata en vasos grandes, café de olla en taza de barro); Cócteles y licores (margaritas con borde de sal y copitas de mezcal).
+- Tira de 3 fotos por categoría: variantes del mismo tema (platos distintos de esa categoría, primer plano y contexto de mesa).
+- Banner "Disfruta México donde estés": familia o amigos compartiendo una mesa llena de comida mexicana, manos sirviendo, 21:9.
+- Membresía: mesa familiar celebrando un cumpleaños con pastel de tres leches.
+- Reservas: mesa puesta con cazuelas de barro, flores y velas.
+- Ubicación (footer): vista aérea estilo mapa de una zona urbana con calles y casas.
+
+# 11. DATOS DEL NEGOCIO (ficticios, centralizados en lib/business.ts)
+- Dirección: Cra. 37 #8A-45, El Poblado, Medellín, Antioquia, Colombia
+- Horario: lunes a jueves 12:00 m. – 10:00 p.m. · viernes y sábado 12:00 m. – 12:00 a.m. · domingo 12:00 m. – 9:00 p.m.
+- WhatsApp y teléfono: +57 300 123 4567
+- Instagram: @comaldecasa
+- Reservas: https://wa.me/573001234567?text=Hola%2C%20me%20gustar%C3%ADa%20reservar%20una%20mesa%20en%20Comal%20de%20Casa.
+- Domicilios: https://wa.me/573001234567?text=Hola%2C%20quiero%20hacer%20un%20pedido%20a%20domicilio%20en%20Comal%20de%20Casa.
+- Club Comal: https://wa.me/573001234567?text=Hola%2C%20quiero%20unirme%20al%20Club%20Comal.
+Todos los enlaces de WhatsApp abren en pestaña nueva (target="_blank" rel="noopener noreferrer").
+
+# 12. CALIDAD Y SEO
+- Responsive de 320 px a pantallas grandes, mobile-first.
+- HTML semántico (header, nav, main, section, footer), un solo h1 por página, jerarquía de encabezados correcta, aria-label en íconos sin texto, aria-current="page" en el enlace activo, desplegables y acordeones accesibles con teclado.
+- Espaciado vertical entre secciones: 96–128 px en escritorio, 56–72 px en móvil; escala base de 8 px.
+- Metadata propia por página. Títulos: "Comal de Casa | Restaurante mexicano en Medellín" (inicio); "[Categoría] | Menú | Comal de Casa" (categorías); "Club Comal | Comal de Casa"; "Reservas | Comal de Casa". Meta descripción única en cada una, mencionando cocina mexicana de casa, El Poblado y Medellín.
+- JSON-LD tipo Restaurant en el layout (nombre, dirección, horario, teléfono, servesCuisine: Mexican, hasMenu).
+- Horarios, dirección y teléfono siempre en texto real, nunca solo dentro de una imagen.
+- Navegación entre páginas con next/link y scroll al inicio de la página al cambiar de ruta.
+- Genera app/sitemap.ts con las 11 rutas.
+
+Entrega el sitio completo funcionando, con todas las páginas, imágenes y el logo generados.
